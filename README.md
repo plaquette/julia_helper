@@ -58,3 +58,17 @@ or with a mounted script:
 ```bash
 docker run -it -v "$(pwd):/scripts" plaquette/julia_helper:ArgParse_CSV_DataFrames_FileIO julia /scripts/wrapper.jl --i=/scripts/ref_coli.fa --k=10 --w=100 
  ```
+
+
+
+ ## add-on, clean up:
+
+run clean-up like this:
+
+```bash
+ # Remove all stopped containers
+docker container prune -f
+
+# Remove <none> images
+docker images | awk '/<none>/ {print $3}' | xargs -r docker rmi
+```
