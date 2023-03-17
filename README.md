@@ -72,3 +72,38 @@ docker container prune -f
 # Remove <none> images
 docker images | awk '/<none>/ {print $3}' | xargs -r docker rmi
 ```
+## add-on, nextflow usage:
+
+in case you want to use this container with nextflow, add it to the config as follows:
+
+```groovy
+singularity.enabled = true
+singularity.cacheDir = "$baseDir/src/sif_images"
+
+process {
+        conda = 'env_file/kmers.yml'
+
+        withName: 'mash_p' {
+                container = 'plaquette/julia_helper:ArgParse_CSV_DataFrames_FileIO'
+            }
+        }
+```
+and activate the environment in the process as follows:
+
+```groovy
+process julia_p {
+        
+    input:
+    tuple path('in.fa'), val(k)
+
+    script:
+    """
+    
+    julia -e 'using Pkg; Pkg.activate(\"/env\"); Pkg.status()'
+    ...
+    ...
+    ...
+    
+    """
+}
+```
